@@ -20,8 +20,6 @@ function printInspirePublist($url,$Nmaxauth)
     $Nthisrec = count($json->{"hits"}->{"hits"});
     for($irec=0;$irec<$Nthisrec;$irec++)
     {
-      $Nremainingrec--;
-      echo "<li>\n";
       $record = $json->{"hits"}->{"hits"}[$irec];                                   // RECORD CONTENTS
       $id = $record->{"id"};                                                        // INSPIRE ID
       $cited = $record->{"metadata"}->{"citation_count"};                           // CITATION COUNT
@@ -60,6 +58,7 @@ function printInspirePublist($url,$Nmaxauth)
       if($page == "") $page = $artid;
 
       // PRINT RECORD
+      echo "<li>\n";
       echo "<b><a href=\"http://inspirehep.net/literature/$id\">$title</a></b>,<br>\n";
       echo "$authlist,<br>\n";
       if($journal != "") echo "$journal <b>$volume</b> ($year) $page";
@@ -73,6 +72,7 @@ function printInspirePublist($url,$Nmaxauth)
     }
 
     // CHECK IF ALL RECORDS DONE
+    $Nremainingrec -= $Nthisrec;
     if($Nremainingrec==0) break;
     else
     {
