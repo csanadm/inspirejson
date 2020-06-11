@@ -13,6 +13,7 @@ function printInspirePublist($url,$Nmaxauth)
   $Nremainingrec = $Ntotalrec;
 
   // START TO PROCESS RECORDS AND PRINT AS HTML LIST
+  $urlpage = 1; // FIRST PAGE DISPLAYED FIRST
   echo "<ol>\n";
   while($Nremainingrec>0)
   {
@@ -94,7 +95,8 @@ function printInspirePublist($url,$Nmaxauth)
     if($Nremainingrec==0) break;
     else
     {
-      $file = file_get_contents($url);
+      $urlpage++;
+      $file = file_get_contents($url."&page=".$urlpage);
       $json = json_decode($file);
     }
   }
