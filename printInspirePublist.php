@@ -69,7 +69,7 @@ function printInspirePublist($url,$Nmaxauth)
       elseif($reportnumber != "") echo "$reportnumber";
       else echo "$doctype".($publother!=""?", $publother":" [INSPIRE record #$id]");
       if($eprint!="") echo ", [<a href=\"http://arxiv.org/abs/$eprint\">arXiv:$eprint</a>]";
-      if($cited>0) echo ", <a href=\"https://inspirehep.net/literature?q=refersto:recid:$id\">cited $cited</a>";
+      if($cited>0) echo ", <a href=\"https://inspirehep.net/literature?q=refersto:recid:$id\">cited $cited times ($indcited independent)</a>";
       echo "<br>\n";
       echo "</li>\n";
     }
