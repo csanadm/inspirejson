@@ -20,11 +20,12 @@ function printInspirePublist($url,$Nmaxauth)
     $Nthisrec = count($json->{"hits"}->{"hits"});
     for($irec=0;$irec<$Nthisrec;$irec++)
     {
-      $record = $json->{"hits"}->{"hits"}[$irec];                                   // RECORD CONTENTS
-      $id = $record->{"id"};                                                        // INSPIRE ID
-      $cited = $record->{"metadata"}->{"citation_count"};                           // CITATION COUNT
-      $indcited = $record->{"metadata"}->{"citation_count_without_self_citations"}; // INDEPENDENT CITATIONS
-      $authors = $record->{"metadata"}->{"authors"};                                // AUTHOR OBJECT
+      $record = $json->{"hits"}->{"hits"}[$irec];                       // RECORD CONTENTS
+      $id = $record->{"id"};                                            // INSPIRE ID
+      $metadata = $record->{"metadata"};                                // ALL METADATA
+      $cited = $metadata->{"citation_count"};                           // CITATION COUNT
+      $indcited = $metadata->{"citation_count_without_self_citations"}; // INDEPENDENT CITATIONS
+      $authors = $metadata->{"authors"};                                // AUTHOR OBJECT
 
       // CREATE PRINTABLE AUTHOR LIST
       $Nauth = count($authors);
@@ -42,19 +43,19 @@ function printInspirePublist($url,$Nmaxauth)
         }
       }
 
-      $title = $record->{"metadata"}->{"titles"}[0]->{"title"};                     // PAPER TITLE
-      $texkey = $record->{"metadata"}->{"texkeys"}[0];                              // PAPER TEXKEY
-      $eprint = $record->{"metadata"}->{"arxiv_eprints"}[0]->{"value"};             // EPRINT ID
-      $arXclass = $record->{"metadata"}->{"arxiv_eprints"}[0]->{"categories"}[0];   // ARXIV CLASS
-      $doctype = $record->{"metadata"}->{"document_type"}[0];                       // DOCUMENT TYPE
-      $reportnumber = $record->{"metadata"}->{"report_numbers"}[0]->{"value"};      // REPORT NUMBER
-      $publinfo = $record->{"metadata"}->{"publication_info"};                      // PUBLICATION INFO OBJECT
-      $publother = $publinfo[0]->{"pubinfo_freetext"};                              // PUBLICATION INFO FREE TEXT
-      $journal = $publinfo[0]->{"journal_title"};                                   // JOURNAL
-      $volume = $publinfo[0]->{"journal_volume"};                                   // VOLUME
-      $year = $publinfo[0]->{"year"};                                               // YEAR
-      $page = $publinfo[0]->{"page_start"};                                         // PAGE
-      $artid = $publinfo[0]->{"artid"};                                             // PAPER ID
+      $title = $metadata->{"titles"}[0]->{"title"};                     // PAPER TITLE
+      $texkey = $metadata->{"texkeys"}[0];                              // PAPER TEXKEY
+      $eprint = $metadata->{"arxiv_eprints"}[0]->{"value"};             // EPRINT ID
+      $arXclass = $metadata->{"arxiv_eprints"}[0]->{"categories"}[0];   // ARXIV CLASS
+      $doctype = $metadata->{"document_type"}[0];                       // DOCUMENT TYPE
+      $reportnumber = $metadata->{"report_numbers"}[0]->{"value"};      // REPORT NUMBER
+      $publinfo = $metadata->{"publication_info"};                      // PUBLICATION INFO OBJECT
+      $publother = $publinfo[0]->{"pubinfo_freetext"};                  // PUBLICATION INFO FREE TEXT
+      $journal = $publinfo[0]->{"journal_title"};                       // JOURNAL
+      $volume = $publinfo[0]->{"journal_volume"};                       // VOLUME
+      $year = $publinfo[0]->{"year"};                                   // YEAR
+      $page = $publinfo[0]->{"page_start"};                             // PAGE
+      $artid = $publinfo[0]->{"artid"};                                 // PAPER ID
       if($page == "") $page = $artid;
 
       // PRINT RECORD
