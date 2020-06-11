@@ -1,6 +1,4 @@
 <?php
-// THIS FUNCTION PRINTS A HTML (ORDERED) LIST BASED ON AN INSPIRE JSON QUERY
-// IT TAKES TWO ARGUMENTS: INSPIRE JSON QUERY LINK AND NUMBER OF MAX AUTHORS TO PRINT
 function printInspirePublist($url,$Nmaxauth)
 {
   if($Nmaxauth<1) $Nmaxauth = 1; // MAX OF AUTHORS TO BE PRINTED
@@ -45,6 +43,7 @@ function printInspirePublist($url,$Nmaxauth)
         }
       }
 
+      // OBTAIN RECORD INFO
       $title = $metadata->{"titles"}[0]->{"title"};                     // PAPER TITLE
       $texkey = $metadata->{"texkeys"}[0];                              // PAPER TEXKEY
       $eprint = $metadata->{"arxiv_eprints"}[0]->{"value"};             // EPRINT ID
@@ -60,6 +59,21 @@ function printInspirePublist($url,$Nmaxauth)
       $artid = $publinfo[0]->{"artid"};                                 // PAPER ID
       if($page == "") $page = $artid;
 
+      // DETERMINE CONFERENCE NAME, IF ANY
+      $confapilink = $publinfo[0]->{"conference_record"}->{"\$ref"};    // CONFERENCE API LINK
+      // CHECK IF CONFERENCE INFO IS IN THE SECOND PART OF PUBLINFO
+      if($confapilink == "" && count($publinfo>1))
+        $confapilink = $publinfo[1]->{"conference_record"}->{"\$ref"};
+      $conftitle = "";
+      $conflink = "";
+      if($confapilink!="")
+      {
+        $conffile = file_get_contents($confapilink);
+        $confjson = json_decode($conffile);
+        $conftitle = $confjson->{"metadata"}->{"titles"}[0]->{"title"}; // CONFERENCE NAME
+        $conflink = str_replace("/api/","/",$confapilink);
+      }
+
       // PRINT RECORD
       echo "<li>\n";
       echo "<b><a href=\"http://inspirehep.net/literature/$id\">$title</a></b>,<br>\n";
@@ -68,7 +82,8 @@ function printInspirePublist($url,$Nmaxauth)
       elseif($doctype == "thesis") echo "PhD thesis";
       elseif($reportnumber != "") echo "$reportnumber";
       else echo "$doctype".($publother!=""?", $publother":" [INSPIRE record #$id]");
-      if($eprint!="") echo ", [<a href=\"http://arxiv.org/abs/$eprint\">arXiv:$eprint</a>]";
+      if($conftitle!="") echo " (prestented at the <a href=\"$conflink\">$conftitle</a>)";
+      if($eprint!="") echo " [<a href=\"http://arxiv.org/abs/$eprint\">arXiv:$eprint</a>]";
       if($cited>0) echo ", <a href=\"https://inspirehep.net/literature?q=refersto:recid:$id\">cited $cited times ($indcited independent)</a>";
       echo "<br>\n";
       echo "</li>\n";
